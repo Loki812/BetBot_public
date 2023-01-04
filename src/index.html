@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bet-Bot algorithmic sports betting</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main" id="main">
+        <div class="title_card">
+            <div id="logo">
+                <img src="../images/bet-bot.png" alt="" width="80" height="80">
+            </div>
+            <div>
+                <p>Bet-Bot</p>
+                <p id="subtext">AI Powered Sports Betting</p>
+            </div>
+        </div>
+        <div id="editable">
+            <div class="navbar_container" id="navbar_container">
+                <div class="navbar_item">
+                    <input type="text" id="username" placeholder="Username">
+                </div>
+                <div class="navbar_item">
+                    <input type="password" id="password" placeholder="Password">
+                </div>
+                <div class="navbar_item">
+                    <button id="login">Login</button>
+                </div>
+                <div id="failed_login"></div>
+            </div>
+            <div class="git">
+                <a target="_blank" href="https://github.com/Loki812">
+                    <img src="../images/github-mark.png" alt="github" id="github">
+                </a>
+            </div>
+            <div class="content_container">
+                <div class="betting_container">
+                    <div class="betting_title">
+                        <p>Current Bets:</p>
+                    </div>
+                    <div id="prizepicks"></div>
+                    <div id="bets_displayed">
+                        <p id="create_account_button">
+                            Dont have a account? Click here to get started.
+                        </p>
+                        <div class="temp_for_loader">
+                            <div class="loader" id="make_green"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="scores_container">
+                    <div class="scores_title">
+                        <p>Scores to watch:</p>
+                    </div>
+                    <div id="scores_displayed">
+                        <div class="loader" id="make_green"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom_bar">
+            <p>Project created by Connor McRoberts. <br> Copyright 2023</p>
+        </div>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
