@@ -94,13 +94,13 @@
     transition-duration: .5s;
 }
 
-#username:focus, #password:focus {
+#username:focus, #password:focus, #password_repeat:focus {
     color: black;
     background-color: #ebebeb;
     opacity: .8;
 }
 
-#login {
+#login, .button {
     position: relative;
     margin-left: 15px;
     height: 33px;
@@ -119,7 +119,7 @@
     place-content: center; 
 }
 
-#login:hover {
+#login:hover, .button:hover {
     background-color: #ebebeb;
     color: black;
     border-color: black;
@@ -164,12 +164,15 @@
     }
 }
 
-#failed_login {
+#failed_login, #failed_login_2 {
     color: #fc3a3a;
     padding-top: 12px;
 }
 
 .bottom_bar {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
     margin-top: 9vh;
     height: 90px;
     display: flex;
@@ -239,6 +242,7 @@
 }
 
 .betting_title {
+    font-family: "aquire", Arial, sans-serif;
     border: #707070 2px solid;
     background-color: #ebebeb;
     font-weight: 500;
@@ -271,4 +275,129 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.account_create {
+    padding: 20px;
+    border: #707070 2px solid;
+    border-radius: 15px;
+    color: black;
+    margin-top: 5vh;
+    margin-left: 7VH;
+    display: flex;
+    background-color: #ebebeb;
+    width: fit-content;
+}
+
+.sports_wrapper {
+    display: flex;
+}
+
+.checkbox-rect input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-rect input[type="checkbox"] + label {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.checkbox-rect input[type="checkbox"]:hover + label:hover {
+    color: rgb(0, 0, 0);
+}
+
+.checkbox-rect input[type="checkbox"]:hover + label:before {
+    background: #8de9a7;
+    box-shadow: inset 0px 0px 0px 2px #ebebeb;
+}
+
+.checkbox-rect input[type="checkbox"] + label:last-child {
+    margin-bottom: 10px;
+}
+
+.checkbox-rect input[type="checkbox"] + label:before {
+    content: "";
+    display: block;
+    width: 1.0em;
+    height: 1.0em;
+    border: 1px solid #000000;
+    border-radius: 0.2em;
+    position: absolute;
+    left: 0;
+    top: 0;
+    -webkit-transition: all 0.2s, background 0.2s ease-in-out;
+    transition: all 0.2s, background 0.2s ease-in-out;
+    background: #f3f3f3;
+}
+
+.checkbox-rect input[type="checkbox"]:checked + label:before {
+    width: .9em;
+    height: .9em;
+    border-radius: 0.2em;
+    border: 2px solid #ebebeb;
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    background: #8de9a7;
+    box-shadow: 0 0 0 1px #000;
+}
+
+.create_title {
+    font-family: "aquire", Arial, sans-serif;
+    margin-bottom: 10px;
+}
+
+#username_create, #password_create, #password_repeat_create {
+    width: 200px;
+    height: 30px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    background: transparent;
+    padding-left: 8px;
+    color: black;
+    border: #707070 2px solid;
+    border-radius: 15px;
+    transition-duration: .5s;
+}
+
+#username_create::placeholder, #password_create::placeholder,
+#password_repeat_create::placeholder {
+    color: black;
+}
+
+#create {
+    margin-left: 45vw;
+    margin-top: 10px;
+    visibility: hidden;
+    font-family: "aquire", Arial, sans-serif;
+    width:fit-content;
+    min-width: 150px;
+    padding: 5PX;
+}
+
+.account_create_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#back_button {
+    cursor: pointer;
+    position: absolute;
+    z-index: 999;
+    left: 15px;
+    transition-duration: .4s;
+    visibility: hidden;
+}
+
+#back {
+    height: 33px;
+}
+
+#back_button:hover {
+    transform: scale(1.2);
 }
