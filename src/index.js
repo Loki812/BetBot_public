@@ -1,41 +1,6 @@
 const electron = require('electron');
 
-function make_visible( page ) { 
 
-    let username = document.getElementById("username");
-    let password = document.getElementById("password");
-    let login = document.getElementById("login");
-    let create = document.getElementById("create");
-    let back_button = document.getElementById("back_button");
-
-    username.style.transitionDuration = "0";
-    password.style.transitionDuration = "0";
-    login.style.transitionDuration = "0";
-    create.style.transitionDuration = "0";
-    back_button.style.transitionDuration = "0";
-
-    if(page) {
-        username.style.visibility = "hidden";
-        password.style.visibility = "hidden";
-        login.style.visibility = "hidden";
-        create.style.visibility = "visible";
-        back_button.style.visibility = "visible";
-    }
-    else {
-        username.style.visibility = "visible";
-        password.style.visibility = "visible";
-        login.style.visibility = "visible";
-        create.style.visibility = "hidden";
-        back_button.style.visibility = "hidden";
-    }
-
-    username.style.transitionDuration = "0.4s";
-    password.style.transitionDuration = "0.4s";
-    login.style.transitionDuration = "0.4s";
-    create.style.transitionDuration = "0.4s";
-    back_button.style.transitionDuration = "0.4s";
-
-}
 
 /**
  * The function login is to be attached to a listener event
@@ -160,8 +125,6 @@ function create_account( event ) {
  */
 function change_dom(event) {
 
-    make_visible(true);
-
     document.getElementById("editable").innerHTML = `
     <div class="account_create_container">
                 <div class="account_create">
@@ -221,8 +184,6 @@ if(document.getElementById("create_account_button") != null) {
 /**************************** Switching back to main screen *************/
 
 function change_dom_back( event ) {
-
-    make_visible(false)
 
     document.getElementById("editable").innerHTML = `
     <div class="content_container">
