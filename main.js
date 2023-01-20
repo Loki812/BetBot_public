@@ -1,10 +1,10 @@
-const mongoDBapi = require('mongodb-data-api');
+const createMongoDBDataAPI = require('mongodb-data-api');
 const path = require('path');
 const {app, BrowserWindow} = require('electron');
 const electron = require('electron');
 
 // creating api constant
-const api = mongoDBapi.createMongoDBDataAPI({
+const api = createMongoDBDataAPI.createMongoDBDataAPI({
   apiKey:'<########>',
   appId: '<betbotapplication-yaelz>'
 })
@@ -42,20 +42,55 @@ app.on('window-all-closed', () => {
 /******************** Login Event ********************/
 
 electron.ipcMain.on("login_event", (event, acc_info) => {
-  var result = "fail";
+    var queryResult;
 
+    await api.findOne( {
+      dataSource: '<Betbot>',
+      database: '<BetBot-Database>',
+      collection: '<User-Data-Collection>',
+      filter: {Username: acc_info.username, Password: acc_info.password}
+     })
+     .then((result) => {
+      queryResult = result.document;
+     })
+
+    main_win.webContents.send("login_return", queryResult);
+})
+
+/************* Account Creation Event *******************/
+
+electron.ipcMain.on("create_event", (event, acc_info) => {
   var queryResult;
 
   await api.findOne( {
     dataSource: '<Betbot>',
     database: '<BetBot-Database>',
-    collection: '<User-Data-Collection>',
-    filter: {Username: username, Password: password}
-   })
-   .then((result) => {
-    queryResult = result;
-   })
+    collection: '<User-Data-Collection',
+    filter: {Username: acc_info.username}
+  })
+  .then((result) => {
+    queryResult = result.document;
+  })
 
-  main_win.webContents.send("login_return", accResult);
-  acc_username = acc_info.username;
+  if(queryResult == null) {
+    await api.insertOne({
+      dataSource: '<Betbot',
+      database: '<Betbot-Database>',
+      collection: '<User-Data-Collection',
+      document: {
+        Username: acc_info.username,
+        Password: acc_info.password,
+        Basketball: acc_info.basketball,
+        Baseball: acc_info.baseball,
+        Football: acc_info.football,
+        Hockey: acc_info.hockey,
+        Soccer: acc_info.soccer
+      }
+    }).then((result) => {
+      main_win.webContents.send("create_return", "success");
+    })
+  }
+  else {
+    main_win.webContents.send("create_return", "failed");
+  }
 })
