@@ -81,7 +81,7 @@ function verify_account( account ) {
         1 special character</u>`
         return false;
     }
-    failed_login.innerHTML = `<u>Username is already taken</u>`
+    failed_login.innerHTML = `<u>Username is too short</u>`
     return false;
 }
 
