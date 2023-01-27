@@ -1,13 +1,51 @@
-const createMongoDBDataAPI = require('mongodb-data-api');
+var axios = require('axios');
 const path = require('path');
 const {app, BrowserWindow} = require('electron');
 const electron = require('electron');
 
-// creating api constant
-const api = createMongoDBDataAPI.createMongoDBDataAPI({
-  apiKey:'<########>',
-  appId: '<betbotapplication-yaelz>'
-})
+/************* API  commands **********/
+
+
+function insertOne( Userdata ) {
+
+	var config = {
+		method: 'post',
+		url: 'https://data.mongodb-api.com/app/data-jhtgu/endpoint/data/v1/action/insertOne',
+		headers: {
+			'Content-Type': 'application/json',
+			'Access-Control-Request-Headers': '*',
+			'api-key': 'xxxxxx'
+		},
+		data: JSON.stringify({
+			"dataSource": "SchoolProject",
+			"database": "BetBot-DataBase",
+			"collection": "User-Data",
+			"document": Userdata
+		})
+	}
+	return config;
+}
+
+function findOne( filter ) {
+
+	var config = {
+		method: 'post',
+		url: 'https://data.mongodb-api.com/app/data-jhtgu/endpoint/data/v1/action/findOne',
+		headers: {
+			'Content-Type': 'application/json',
+			'Access-Control-Request-Headers': '*',
+			'api-key': 'xxxxxx'
+		},
+		data: JSON.stringify({
+			"dataSource": "SchoolProject",
+			"database": "BetBot-DataBase",
+			"collection": "User-Data",
+			"filter": filter
+		})
+	}
+	return config;
+}
+
 
 
 /******************** Stuff for launching electron *********************/
@@ -41,56 +79,55 @@ app.on('window-all-closed', () => {
 
 /******************** Login Event ********************/
 
+/**
+ * When the user clicks on the login (id="login" on index.html) button, and both input boxes
+ * have content inside of them, index.js sends a signal to 
+ * ipcMain renderer, in the "login_event" channel.
+ * 
+ * This event will query the mongodb database with the username and encrypted password,
+ * and return the result (may be null).
+ * 
+ * @param {event} event: The event sent to ipcMain after the user clicks 
+ * id="login" on index.html
+ * 
+ * @param {Object} acc_info: Two Fields meant to represent the account information
+ * 		- username, taken from the id="username" input box in index.html
+ * 		- password, taken from the id="password" input box in index.html (encrypted)
+ */
 electron.ipcMain.on("login_event", (event, acc_info) => {
-    var queryResult;
+	
+    var acc_document = findOne({'username': acc_info.username, 
+	'password': acc_info.password});
 
-    await api.findOne( {
-      dataSource: '<Betbot>',
-      database: '<BetBot-Database>',
-      collection: '<User-Data-Collection>',
-      filter: {Username: acc_info.username, Password: acc_info.password}
-     })
-     .then((result) => {
-      queryResult = result.document;
-     })
-
-    main_win.webContents.send("login_return", queryResult);
+	
+    main_win.webContents.send('login_return', acc_document)
 })
 
 /************* Account Creation Event *******************/
 
+/**
+ * When the user clicks the "create account" buttonon the page,
+ * and it passed all tests to verify information was filled out,
+ * index.js sends an event to main.js, where we can verify if the username 
+ * already exists on the database
+ * 
+ *  - if it does, this event sends back a "failed" string, and the 
+ * 	application will instruct the user to try again
+ * 
+ *  - if it does not, the event will call upon the mongodb api
+ *  and insert a new document into our "User-Data-Collection"
+ * 
+ * @param {event} event: The event sent to ipcmain after the user
+ * clicks the "create account" button
+ * 
+ * @param {Object} acc_info: Seven Fields meant to represent account information
+ * 		- username: String from input box "username_create" on index.js
+ * 		- password: String from input boc "password_create" on index.js, now encrpyted
+ * 		- basketball: Boolean from checkbox "basketball" on index.js
+ * 		- etc. for all other sports
+ */
 electron.ipcMain.on("create_event", (event, acc_info) => {
-  var queryResult;
 
-  await api.findOne( {
-    dataSource: '<Betbot>',
-    database: '<BetBot-Database>',
-    collection: '<User-Data-Collection',
-    filter: {Username: acc_info.username}
-  })
-  .then((result) => {
-    queryResult = result.document;
-  })
-
-  if(queryResult == null) {
-    await api.insertOne({
-      dataSource: '<Betbot',
-      database: '<Betbot-Database>',
-      collection: '<User-Data-Collection',
-      document: {
-        Username: acc_info.username,
-        Password: acc_info.password,
-        Basketball: acc_info.basketball,
-        Baseball: acc_info.baseball,
-        Football: acc_info.football,
-        Hockey: acc_info.hockey,
-        Soccer: acc_info.soccer
-      }
-    }).then((result) => {
-      main_win.webContents.send("create_return", "success");
-    })
-  }
-  else {
-    main_win.webContents.send("create_return", "failed");
-  }
+	
+	
 })

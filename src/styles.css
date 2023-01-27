@@ -261,7 +261,7 @@
     border-bottom-right-radius: 15px;
 }
 
-#create_account_button {
+#change_dom {
     cursor: pointer;
     border-bottom: #707070 2px solid;
     background-color: #8de9a7;
@@ -347,7 +347,7 @@
 }
 
 .create_title {
-    font-family: "aquire", Arial, sans-serif;
+    font-family: Arial, sans-serif;
     margin-bottom: 10px;
 }
 
@@ -373,7 +373,7 @@
     margin-left: 45vw;
     margin-top: 10px;
     visibility: hidden;
-    font-family: "aquire", Arial, sans-serif;
+    font-family: Arial, sans-serif;
     width:fit-content;
     min-width: 150px;
     padding: 5PX;
@@ -391,7 +391,6 @@
     z-index: 999;
     left: 15px;
     transition-duration: .4s;
-    visibility: hidden;
 }
 
 #back {

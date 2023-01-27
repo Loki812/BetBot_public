@@ -1,7 +1,5 @@
 const electron = require('electron');
 
-
-
 /**
  * The function login is to be attached to a listener event
  * on thg 'login' button on the navbar, it grabs the value
@@ -35,6 +33,8 @@ if(document.getElementById("login") != null) {
     document.getElementById("login").addEventListener("click", login);
 }
 
+
+//TODO
 // signal that the server has responed to the login attempt. If successful
 // the event will contain the user's current bets. If not the window displays
 // the message "wrong username or password".
@@ -101,9 +101,11 @@ function create_account( event ) {
             "baseball": document.getElementById("baseball").checked,
             "football": document.getElementById("football").checked,
             "hockey": document.getElementById("hockey").checked,
-            "soccer": document.getElementById("soccer").checked
+            "soccer": document.getElementById("soccer").checked,
+            "current_bets": null
         }
         if(verify_account(account)) {
+            account.password = window.btoa(document.getElementById("password_create").value);
             electron.ipcRenderer.send("create_event", account);
         }
     }
@@ -111,10 +113,21 @@ function create_account( event ) {
         document.getElementById("failed_login_2").innerHTML = `
         <u> Password attempts must match`
     }
-
-    
-
 }
+
+electron.ipcRenderer.on("acc_creation", (event, code) => {
+
+    if(code == 0) {
+        document.getElementById("navbar_container").innerHTML = ``
+
+        document.getElementById("account_create").innerHTML = `
+        <h1 class="create_title"> Account creation successful!
+        <br> Please restart the application to log in. </h1>
+        `
+    }
+})
+
+/**************************** User input DOM manipulation events *************/
 
 /**
  * The function change_dom, manipulates the dom by displaying a form that 
@@ -127,49 +140,61 @@ function change_dom(event) {
 
     document.getElementById("editable").innerHTML = `
     <div class="account_create_container">
-                <div class="account_create">
-                    <form>
-                        <h1 class="create_title">Create an account:</h1>
-                        <input class="create_input" type="text" id="username_create" 
-                        value="" placeholder="Username">
-                        <br>
-                        <input class="create_input" type="password" id="password_create" 
-                        value="" placeholder="Password">
-                        <br>
-                        <input class="create_input" type="password" id="password_repeat_create" 
-                        value="" placeholder="Re-enter password">
-                        <br>
-                        <div class="sports_wrapper">
-                            <div class="checkbox-rect">
-                                <input type="checkbox" id="basketball">
-                                <label for="basketball">Basketball</label>
-                            </div>
-                            <div class="checkbox-rect">
-                                <input type="checkbox" id="baseball">
-                                <label for="baseball">Baseball</label>
-                            </div>
-                        </div>
-                        <div class="sports_wrapper">
-                            <div class="checkbox-rect">
-                                <input type="checkbox" id="football">
-                                <label for="football">Football</label>
-                            </div>
-                            <div class="checkbox-rect" id="hockey_but">
-                                <input type="checkbox" id="hockey">
-                                <label for="hockey">Hockey</label>
-                            </div>
-                        </div>
-                        <div class="sports_wrapper">
-                            <div class="checkbox-rect" id="soccer_but">
-                                <input type="checkbox" id="soccer">
-                                <label for="soccer">Soccer</label>
-                            </div>
-                        </div>
-                        <div id="failed_login_2"></div>
-                    </form>
+        <div class="account_create">
+            <form>
+                <h1 class="create_title">Create an account:</h1>
+                <input class="create_input" type="text" id="username_create" 
+                value="" placeholder="Username">
+                <br>
+                <input class="create_input" type="password" id="password_create" 
+                value="" placeholder="Password">
+                <br>
+                <input class="create_input" type="password" id="password_repeat_create" 
+                value="" placeholder="Re-enter password">
+                <br>
+                <div class="sports_wrapper">
+                    <div class="checkbox-rect">
+                        <input type="checkbox" id="basketball">
+                        <label for="basketball">Basketball</label>
+                    </div>
+                    <div class="checkbox-rect">
+                        <input type="checkbox" id="baseball">
+                        <label for="baseball">Baseball</label>
+                    </div>
                 </div>
-            </div>
-    `
+                <div class="sports_wrapper">
+                    <div class="checkbox-rect">
+                        <input type="checkbox" id="football">
+                        <label for="football">Football</label>
+                    </div>
+                    <div class="checkbox-rect" id="hockey_but">
+                        <input type="checkbox" id="hockey">
+                        <label for="hockey">Hockey</label>
+                    </div>
+                </div>
+                <div class="sports_wrapper">
+                    <div class="checkbox-rect" id="soccer_but">
+                        <input type="checkbox" id="soccer">
+                        <label for="soccer">Soccer</label>
+                    </div>
+                </div>
+                <div id="failed_login_2"></div>
+            </form>
+        </div>
+    </div>`
+
+    document.getElementById("login").removeEventListener("click", login);
+
+    document.getElementById("navbar_container").innerHTML = `
+    <div class="navbar_item" id="back_button">
+        <img id="back" src="../images/back_button.png" alt="">
+    </div>`;
+
+    if(document.getElementById("back_button") != null) {
+        document.getElementById("back_button").addEventListener("click", change_dom_back);
+    }
+
+    document.getElementById("create").style.visibility = 'visible';
     
     if(document.getElementById("create") != null) {
         document.getElementById("create").addEventListener("click", create_account);
@@ -177,11 +202,10 @@ function change_dom(event) {
 }
 
 // verifys that there is a create_account button div on the page
-if(document.getElementById("create_account_button") != null) {
-    document.getElementById("create_account_button").addEventListener("click", change_dom);
+if(document.getElementById("change_dom") != null) {
+    document.getElementById("change_dom").addEventListener("click", change_dom);
 }
 
-/**************************** Switching back to main screen *************/
 
 function change_dom_back( event ) {
 
@@ -193,7 +217,7 @@ function change_dom_back( event ) {
                 </div>
                 <div id="prizepicks"></div>
                 <div id="bets_displayed">
-                    <p id="create_account_button">
+                    <p id="change_dom">
                         Dont have a account? Click here to get started.
                     </p>
                     <div class="temp_for_loader">
@@ -211,13 +235,27 @@ function change_dom_back( event ) {
             </div>        
     </div>`;
 
-    document.getElementById("create").removeEventListener("click", create_account);
-    if(document.getElementById("create_account_button") != null) {
-        document.getElementById("create_account_button").addEventListener("click",change_dom);
+    document.getElementById("navbar_container").innerHTML = `
+    <div class="navbar_item">
+        <input type="text" id="username" placeholder="Username">
+    </div>
+    <div class="navbar_item">
+        <input type="password" id="password" placeholder="Password">
+    </div>
+    <div class="navbar_item">
+        <button id="login">Login</button>
+    </div>
+    <div id="failed_login"></div>`;
+
+    if(document.getElementById("login") != null) {
+        document.getElementById("login").addEventListener("click", login);
     }
 
-}
+    document.getElementById("create").style.visibility = 'hidden';
+    document.getElementById("create").removeEventListener("click", create_account);
 
-if(document.getElementById("back_button") != null) {
-    document.getElementById("back_button").addEventListener("click", change_dom_back);
+    if(document.getElementById("change_dom") != null) {
+        document.getElementById("change_dom").addEventListener("click", change_dom);
+    }
+
 }
