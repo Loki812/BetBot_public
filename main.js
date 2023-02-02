@@ -47,7 +47,6 @@ function findOne( filter ) {
 			"filter": filter
 		})
 	}
-	
 	return config;
 }
 
@@ -112,7 +111,6 @@ app.whenReady().then(() => {
   });
 })
 
-// lol
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
