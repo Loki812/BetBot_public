@@ -38,13 +38,13 @@ if(document.getElementById("login") != null) {
 // signal that the server has responed to the login attempt. If successful
 // the event will contain the user's current bets. If not the window displays
 // the message "wrong username or password".
-electron.ipcRenderer.on("login_return", (event, result, username) => {
+electron.ipcRenderer.on("login_return", (event, Userdata) => {
     document.getElementById("main").style.cursor = "auto";
     document.getElementById("login").style.cursor = "pointer";
-    if(result == "success") {
+    if(Userdata != null) {
         document.getElementById("navbar_container").innerHTML = 
         `<div class="navbar_item" id="welcome"> Welcome, 
-        ` + username + `</div>`;
+        ` + Userdata.username + `</div>`;
         // TODO loading bets, scores etc.
     }
     else {
@@ -117,13 +117,19 @@ function create_account( event ) {
 
 electron.ipcRenderer.on("acc_creation", (event, code) => {
 
-    if(code == 0) {
+    alert("this works");
+    alert(code);
+
+    if(code == true) {
         document.getElementById("navbar_container").innerHTML = ``
 
         document.getElementById("account_create").innerHTML = `
         <h1 class="create_title"> Account creation successful!
         <br> Please restart the application to log in. </h1>
         `
+    }
+    else {
+
     }
 })
 

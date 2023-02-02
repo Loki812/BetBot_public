@@ -2,11 +2,14 @@ var axios = require('axios');
 const path = require('path');
 const {app, BrowserWindow} = require('electron');
 const electron = require('electron');
+const { config } = require('process');
+const { resolve } = require('path');
 
 /************* API  commands **********/
 
 
 function insertOne( Userdata ) {
+	console.log(Userdata);
 
 	var config = {
 		method: 'post',
@@ -14,7 +17,7 @@ function insertOne( Userdata ) {
 		headers: {
 			'Content-Type': 'application/json',
 			'Access-Control-Request-Headers': '*',
-			'api-key': 'xxxxxx'
+			'api-key': 'xxxxxxxxxxxxxx'
 		},
 		data: JSON.stringify({
 			"dataSource": "SchoolProject",
@@ -24,6 +27,7 @@ function insertOne( Userdata ) {
 		})
 	}
 	return config;
+	
 }
 
 function findOne( filter ) {
@@ -34,7 +38,7 @@ function findOne( filter ) {
 		headers: {
 			'Content-Type': 'application/json',
 			'Access-Control-Request-Headers': '*',
-			'api-key': 'xxxxxx'
+			'api-key': 'xxxxxxxxxxxxx'
 		},
 		data: JSON.stringify({
 			"dataSource": "SchoolProject",
@@ -43,9 +47,44 @@ function findOne( filter ) {
 			"filter": filter
 		})
 	}
+	
 	return config;
 }
 
+async function MONGO_create_acc( Userdata ) {
+
+	const doesUsernameExist = await axios.request(
+		findOne({'username': Userdata.username}))
+		.then(result => result.data.document);
+
+	console.log(doesUsernameExist);
+
+	if(doesUsernameExist == null) {
+		axios.request(insertOne(Userdata))
+
+
+		return new Promise((resolve, reject) => {
+			resolve(true);
+		})
+	}
+	else {
+		return new Promise((resolve, reject) => {
+			resolve(false);
+		});
+	}
+}
+
+async function MONGO_login_acc( Userdata ) {
+
+	const doesUserExist = await axios.request(
+		findOne({'username': Userdata.username, 
+		'password': Userdata.password}))
+		.then(result => result.data.document)
+		
+	return new Promise((resolve, reject) => {
+		resolve(doesUserExist);
+	})
+}
 
 
 /******************** Stuff for launching electron *********************/
@@ -94,13 +133,14 @@ app.on('window-all-closed', () => {
  * 		- username, taken from the id="username" input box in index.html
  * 		- password, taken from the id="password" input box in index.html (encrypted)
  */
-electron.ipcMain.on("login_event", (event, acc_info) => {
+electron.ipcMain.on("login_event", async (event, acc_info) => {
 	
-    var acc_document = findOne({'username': acc_info.username, 
-	'password': acc_info.password});
+	// JSON Object
+    const result = await MONGO_login_acc(acc_info);
 
+	main_win.webContents.send("login_return", result);
 	
-    main_win.webContents.send('login_return', acc_document)
+
 })
 
 /************* Account Creation Event *******************/
@@ -126,8 +166,10 @@ electron.ipcMain.on("login_event", (event, acc_info) => {
  * 		- basketball: Boolean from checkbox "basketball" on index.js
  * 		- etc. for all other sports
  */
-electron.ipcMain.on("create_event", (event, acc_info) => {
+electron.ipcMain.on("create_event", async (event, acc_info) => { 
+	
+	const result = await MONGO_create_acc(acc_info);
 
-	
-	
+	main_win.webContents.send("acc_creation", result);
+
 })
