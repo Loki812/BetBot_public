@@ -7,7 +7,26 @@ const { resolve } = require('path');
 
 /************* API  commands **********/
 
-
+/**
+ * The function insertOne is used to make a POST request configuration.
+ * This involves a JSON object with members like 'method', 'url',
+ * 'headers', and the 'data pay-load'.
+ * 
+ * 
+ * @param {Object} Userdata: A JSON object with the following members
+ * 		-	username: the username for a new account, taken from the
+ * 			'username_create' element, found in index.js, in changedom().
+ * 
+ * 		-	password: the 64-bit encrypted password, taken from
+ * 			'password_create' element, found in index.js, in changedom().
+ * 
+ * 		-	basketball: a boolean value, telling us what sports the user is
+ * 			interested in. found in index.js, in changedom().
+ * 
+ * 		-	etc. for all other sports
+ * 				 
+ * @returns A JSON object containing the 'Userdata' in the data member 
+ */
 function insertOne( Userdata ) {
 	console.log(Userdata);
 
@@ -30,6 +49,18 @@ function insertOne( Userdata ) {
 	
 }
 
+/**
+ * The function findOne is used to make a POST request configuration.
+ * This involves a JSON object with members like 'method', 'url',
+ * 'headers', and the 'data pay-load'.
+ * 
+ * 
+ * @param {Object} filter: A JSON object with key-value pairs,
+ * 		-	ex. {'username': lala.username, 'password': lala.password}
+ * 
+ * 
+ * @returns A JSON object containing 'filter' as a member in the data member 
+ */
 function findOne( filter ) {
 
 	var config = {
@@ -50,6 +81,29 @@ function findOne( filter ) {
 	return config;
 }
 
+/**
+ * The function MONGO_create_acc is used to interact with the 
+ * MONGODB Data API, first checking if the choosen username already
+ * exists in the database. Then it inserts a new document containing
+ * all fields in the 'Userdata' object.
+ * 
+ * 
+ * @param {Object} Userdata: A JSON object with the following members
+ * 		-	username: the username for a new account, taken from the
+ * 			'username_create' element, found in index.js, in changedom().
+ * 
+ * 		-	password: the 64-bit encrypted password, taken from
+ * 			'password_create' element, found in index.js, in changedom().
+ * 
+ * 		-	basketball: a boolean value, telling us what sports the user is
+ * 			interested in. found in index.js, in changedom().
+ * 
+ * 		-	etc. for all other sports
+ * 
+ *  
+ * @returns A true or false boolean, since it is asynchronous it comes in 
+ * the form of a promise.
+ */
 async function MONGO_create_acc( Userdata ) {
 
 	const doesUsernameExist = await axios.request(
@@ -73,6 +127,21 @@ async function MONGO_create_acc( Userdata ) {
 	}
 }
 
+/**
+ * The function MONGO_login_acc is used to interact with the
+ * MONGODB Data API, checking if the combination of username
+ * and password exists. It then grabs the resulting document.
+ * 
+ * 
+ * @param {Object} Userdata: A JSON object that contains
+ * 		-	username:
+ * 
+ * 		-	password:
+ * 
+ *  
+ * @returns A JSON object with all members in Userdata
+ * and currentbets, hopefully not null.
+ */
 async function MONGO_login_acc( Userdata ) {
 
 	const doesUserExist = await axios.request(

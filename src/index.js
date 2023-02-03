@@ -117,9 +117,6 @@ function create_account( event ) {
 
 electron.ipcRenderer.on("acc_creation", (event, code) => {
 
-    alert("this works");
-    alert(code);
-
     if(code == true) {
         document.getElementById("navbar_container").innerHTML = ``
 
@@ -146,7 +143,7 @@ function change_dom(event) {
 
     document.getElementById("editable").innerHTML = `
     <div class="account_create_container">
-        <div class="account_create">
+        <div class="account_create" id="account_create">
             <form>
                 <h1 class="create_title">Create an account:</h1>
                 <input class="create_input" type="text" id="username_create" 
